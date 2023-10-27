@@ -9,6 +9,7 @@ from luma.core.render import canvas
 from luma.core.sprite_system import framerate_regulator
 from luma.core import lib
 from luma.oled.device import sh1106
+from luma.lcd.device import st7735
 import RPi.GPIO as GPIO
 import datetime
 import time
@@ -25,7 +26,7 @@ import struct
 import smbus2 as smbus
 
 UPS = 0 # 1 = UPS Lite connected / 0 = No UPS Lite hat
-SCNTYPE = 1  # 1= OLED #2 = TERMINAL MODE BETA TESTS VERSION
+SCNTYPE = 3  # 1= OLED #2 = TERMINAL MODE BETA TESTS VERSION #3 = lcd
 
 
 
@@ -59,10 +60,14 @@ font = ImageFont.load_default()
 # Create blank image for drawing.
 # Make sure to create image with mode '1' for 1-bit color.
 width = 128
-height = 64
+height = 128
 image = Image.new('1', (width, height))
 # First define some constants to allow easy resizing of shapes.
-padding = -2
+if SCNTYPE != 3:
+    padding = -2
+else:
+    padding = 2
+
 top = padding
 bottom = height-padding
 line1 = top
@@ -72,6 +77,15 @@ line4 = top+25
 line5 = top+34
 line6 = top+43
 line7 = top+52
+if SCNTYPE == 3:
+    line1 = line1 * 2
+    line2 = line2 * 2
+    line3 = line3 * 2
+    line4 = line4 * 2
+    line5 = line5 * 2
+    line6 = line6 * 2
+    line7 = line7 * 2
+
 brightness = 255 #Max
 file=""
 # Move left to right keeping track of the current x position for drawing shapes.
@@ -114,9 +128,16 @@ if SCNTYPE == 1:
         serial = i2c(port=1, address=0x3c)
     else:
         serial = spi(device=0, port=0, bus_speed_hz = 8000000, transfer_size = 4096, gpio_DC = 24, gpio_RST = 25)
+if SCNTYPE == 3:
+    if  USER_I2C == 1:
+        raise Exception("Selected SCNTYPE doesn't support I2C")
+    else:
+        serial = spi(device=0, port=0, gpio_DC = 25, gpio_RST = 27)
+
 if SCNTYPE == 1:
     device = sh1106(serial, rotate=2) #sh1106
-
+if SCNTYPE == 3:
+    device = st7735(serial, rotate=0) #st7735
 
 def execcmd(cmd):
     try:
@@ -310,7 +331,7 @@ def displayMsg(msg,t):
 
 def DisplayText(l1,l2,l3,l4,l5,l6,l7):
     # simple routine to display 7 lines of text
-    if SCNTYPE == 1:
+    if SCNTYPE == 1 or SCNTYPE == 3:
         with canvas(device) as draw:
             draw.text((0, line1), l1,  font=font, fill=255)
             draw.text((0, line2), l2, font=font, fill=255)
@@ -494,7 +515,7 @@ def OsDetails(ips):
     return(shell("nmap -p 22,80,445,65123,56123 -O " + ips + " | grep \"OS details:\" | cut -d \":\" -f2 | cut -d \",\" -f1"))
 def OLEDContrast(contrast):
     #set contrast 0 to 255
-    if SCNTYPE == 1:
+    if SCNTYPE == 1 or SCNTYPE == 3:
         while GPIO.input(KEY_LEFT_PIN):
             #loop until press left to quit
             with canvas(device) as draw:
@@ -517,7 +538,7 @@ def OLEDContrast(contrast):
                 draw.text((54, line4), "Value : " + str(contrast),  font=font, fill=255)
     return(contrast)
 def splash():
-    img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'threeanonymous.bmp'))
+    img_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'images', 'bootdefcon.bmp'))
     splash = Image.open(img_path) \
         .transform((device.width, device.height), Image.AFFINE, (1, 0, 0, 0, 1, 0), Image.BILINEAR) \
         .convert(device.mode)
@@ -525,13 +546,13 @@ def splash():
     time.sleep(5) #5 sec splash boot screen
 def SreenOFF():
     #put screen off until press left
-    if SCNTYPE == 1:
+    if SCNTYPE == 1 or SCNTYPE == 3:
         while GPIO.input(KEY_LEFT_PIN):
             device.hide()
             time.sleep(0.1)
         device.show()
 def KeyTest():
-    if SCNTYPE == 1:
+    if SCNTYPE == 1 or SCNTYPE == 3:
         while GPIO.input(KEY_LEFT_PIN):
             with canvas(device) as draw:
                 if GPIO.input(KEY_UP_PIN): # button is released
@@ -885,7 +906,7 @@ def ApplyTemplate(template,section):
                 return()
         return()
 def Gamepad():
-    if SCNTYPE == 1:
+    if SCNTYPE == 1 or SCNTYPE == 3:
         while GPIO.input(KEY_PRESS_PIN):
             with canvas(device) as draw:
                 if GPIO.input(KEY_UP_PIN): # button is released
@@ -934,7 +955,7 @@ def Mouse():
     bouton2 = 0
     step = 10
     time.sleep(0.5)
-    if SCNTYPE == 1:
+    if SCNTYPE == 1 or SCNTYPE == 3:
         while GPIO.input(KEY2_PIN):
             with canvas(device) as draw:
                 if GPIO.input(KEY_UP_PIN): # button is released
@@ -1961,7 +1982,7 @@ page=0
 menu = 1
 line = ["","","","","","","",""]
 selection = 0
-if SCNTYPE == 1:
+if SCNTYPE == 1 or SCNTYPE == 3:
     print("sctype")
     splash()  # display boot splash image ---------------------------------------------------------------------
     #print("selected : " + FileSelect(hidpath,".js"))
