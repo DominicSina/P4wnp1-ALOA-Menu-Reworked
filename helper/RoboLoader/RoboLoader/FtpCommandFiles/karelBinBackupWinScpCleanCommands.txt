@@ -1,0 +1,95 @@
+get -delete are_p_con.pc
+get -delete cal_ap.pc
+get -delete cal_dist.pc
+get -delete cal_len.pc
+get -delete cal_min.pc
+get -delete cal_norm.pc
+get -delete cal_qdet.pc
+get -delete cal_qsolnr.pc
+get -delete cal_qsols.pc
+get -delete cal_scale.pc
+get -delete clr_pth_cch.pc
+get -delete conv.pc
+get -delete cp_pr_conf.pc
+get -delete cp_pr_wpr.pc
+get -delete cp_pr_xyz.pc
+get -delete cp_pr_xyzwpr.pc
+get -delete fnd_path.pc
+get -delete fnd_pth_tst.pc
+get -delete get_chldrn.pc
+get -delete get_tpe_prms.pc
+get -delete hash.pc
+get -delete hash_path.pc
+get -delete ini_tp_prg.pc
+get -delete intr_lnsp.pc
+get -delete is_chld_of.pc
+get -delete move_to_kl.pc
+get -delete make_p_tr.pc
+get -delete make_p_tr2.pc
+get -delete make_p_tr3.pc
+get -delete min_hash.pc
+get -delete pos_tr.pc
+get -delete prnt_tpe_ln.pc
+get -delete prsn_hsh.pc
+get -delete qck_srt.pc
+get -delete set_pr.pc
+get -delete set_tpe_prms.pc
+get -delete stack.pc
+get -delete types.pc
+get -delete undisc_tr.pc
+get -delete updt_pos.pc
+get -delete wrt_mtn_in.pc
+get -delete wrt_pt_json.pc
+get -delete wrt_pth_prg.pc
+get -delete wrt_ref_tst.pc
+get -delete wrt_rou_prg.pc
+get -delete wrt_tp_ln.pc
+get -delete wrt_tst_prg.pc
+
+rm are_p_con.vr
+rm cal_ap.vr
+rm cal_dist.vr
+rm cal_len.vr
+rm cal_min.vr
+rm cal_norm.vr
+rm cal_qdet.vr
+rm cal_qsolnr.vr
+rm cal_qsols.vr
+rm cal_scale.vr
+rm clr_pth_cch.vr
+rm conv.vr
+rm cp_pr_conf.vr
+rm cp_pr_wpr.vr
+rm cp_pr_xyz.vr
+rm cp_pr_xyzwpr.vr
+rm fnd_path.vr
+rm fnd_pth_tst.vr
+rm get_chldrn.vr
+rm get_tpe_prms.vr
+rm hash.vr
+rm hash_path.vr
+rm ini_tp_prg.vr
+rm intr_lnsp.vr
+rm is_chld_of.vr
+rm move_to_kl.vr
+rm make_p_tr.vr
+rm make_p_tr2.vr
+rm make_p_tr3.vr
+rm min_hash.vr
+rm pos_tr.vr
+rm prnt_tpe_ln.vr
+rm prsn_hsh.vr
+rm qck_srt.vr
+rm set_pr.vr
+rm set_tpe_prms.vr
+rm stack.vr
+rm types.vr
+rm undisc_tr.vr
+rm updt_pos.vr
+rm wrt_mtn_in.vr
+rm wrt_pt_json.vr
+rm wrt_pth_prg.vr
+rm wrt_ref_tst.vr
+rm wrt_rou_prg.vr
+rm wrt_tp_ln.vr
+rm wrt_tst_prg.vr

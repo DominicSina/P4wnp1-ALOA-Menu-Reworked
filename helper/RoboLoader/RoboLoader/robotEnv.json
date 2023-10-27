@@ -1,0 +1,20 @@
+{
+  "activeRobot": "WS",
+  "robots":
+    [
+      {"name":"WS","robotFolder":"WS","ip":"192.168.1.121","port":"21"},
+      {"name":"WZ","robotFolder":"WZ","ip":"192.168.1.122","port":"21"},
+      {"name":"PAL","robotFolder":"PAL","ip":"192.168.1.123","port":"21"},
+      {"name":"WS680","robotFolder":"WS680","ip":"192.168.1.124","port":"21"},
+    ],
+  "config": {
+    "robotsBaseFolder": "%~dp0\\..\\Robots\\%backupFolder%",
+    "___robotsBaseFolder": "%~dp0\\..\\Backup\\tags\\nr\\%subfolder%\\Robots",
+    "normalizeSource": true,
+    "subfolderSettings":{
+      "textFolder": "Source",
+      "binaryFolder": "Binary",
+      "miscFolder": "Misc"
+    }
+  }
+}

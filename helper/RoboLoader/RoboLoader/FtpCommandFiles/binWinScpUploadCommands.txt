@@ -1,0 +1,1 @@
+put -filemask="*.tp|-bckedt-.tp;-bcked*-.tp;clskp_ex.tp;clskp_g*.tp;clskp.tp;getdata.tp;reqmenu.tp;senddata.tp;sendevnt.tp;sendsysv.tp;setskcol.tp" *

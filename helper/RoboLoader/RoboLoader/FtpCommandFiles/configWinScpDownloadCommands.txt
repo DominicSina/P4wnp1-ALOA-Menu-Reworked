@@ -1,0 +1,7 @@
+get posreg.va
+get numreg.va
+get sysframe.va
+get dcspos.va
+get syseip.va
+get sysmacro.sv
+get ioconfig.dg

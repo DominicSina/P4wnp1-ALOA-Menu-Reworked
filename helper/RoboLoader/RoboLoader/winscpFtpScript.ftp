@@ -1,0 +1,8 @@
+open ftp://user@127.0.0.1:21
+option batch on
+option confirm off
+
+
+get -filemask="*.ls|-bcked*-*;clskp_ex.ls;clskp_g*.ls;clskp.ls;erract.ls;errall.ls;errapp.ls;errcomm.ls;errcurr.ls;errext.ls;errhist.ls;errmot.ls;errpwd.ls;errsys.ls;getdata.ls;hist.ls;logbook.ls;reqmenu.ls;senddata.ls;sendevnt.ls;sendsysv.ls;setskcol.ls;updtlog.ls;vtrndiag.ls" *
+
+exit
