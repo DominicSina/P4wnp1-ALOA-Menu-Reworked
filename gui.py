@@ -24,6 +24,7 @@ import os
 import base64
 import struct
 import smbus2 as smbus
+import reverseShellListener
 
 UPS = 0 # 1 = UPS Lite connected / 0 = No UPS Lite hat
 SCNTYPE = 3  # 1= OLED #2 = TERMINAL MODE BETA TESTS VERSION #3 = lcd
@@ -408,7 +409,7 @@ def switch_menu(argument):
         48: "_",
         #newmenu
         49: "_WIRED THINGS",
-        50: "_newsubmenu2",
+        50: "_INDUSTRIAL",
         51: "_newsubmenu3",
         52: "_newsubmenu4",
         53: "_newsubmenu5",
@@ -422,8 +423,8 @@ def switch_menu(argument):
         60: "_HydraSMB",
         61: "_",
         62: "_",
-        #newsections
-        63: "_",
+        #Industrial
+        63: "_StartRevListener",
         64: "_",
         65: "_",
         66: "_",
@@ -2134,6 +2135,17 @@ while 1:
             if (page == 49):
                 if cursor == 1:
                     page = 56
+                if cursor == 2:
+                    page = 63
+                if cursor == 7:
+                    update()
+
+            #industrial section
+            if (page == 63):
+                if cursor == 1:
+                    Popen(['nohup','reverseShellListener.listen("0.0.0.0",9999)'],preexec_fn=os.setpgrp) 
+                if cursor == 1:
+                    page = 63
                 if cursor == 7:
                     update()
 
