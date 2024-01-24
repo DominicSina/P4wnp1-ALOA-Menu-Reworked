@@ -53,28 +53,13 @@ def listen(ip,port):
                          }
                      }
 
-                     Start-Process -FilePath $dl\"\\\\RoboLoader\\\\_downloadCompleteBackup.bat\" -ArgumentList \"CONT\" -Wait
-                     echo doneDeal"""
+                     Start-Process -FilePath $dl\"\\\\RoboLoader\\\\_downloadBin.bat\" -ArgumentList \"CONT\" -Wait
+                     echo \"Backup finished or aborted\""""
     command += "\n"
     conn.send(command.encode())
-    time.sleep(20)
 	
     #Receive data from the target and get user input
     ans = conn.recv(1024).decode()
     sys.stdout.write(ans)
-
-    while True:
-        #Send command
-        command = input("Give input:")
-        command += "\n"
-        conn.send(command.encode())
-        time.sleep(1)
-	
-        #Receive data from the target and get user input
-        ans = conn.recv(1024).decode()
-        sys.stdout.write(ans)
-        
-        #Remove the output of the "input()" function
-        #sys.stdout.write("\033[A" + ans.split("\n")[-1])
-
-listen("0.0.0.0",9999)
+    s.close()
+    # s.shutdown(1) # gives bad file descriptor error
