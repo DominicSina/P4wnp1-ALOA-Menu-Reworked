@@ -1,6 +1,6 @@
 import socket, sys, time
 
-def listen(ip,port):
+def listen(ip,port,activeRobot):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((ip, port))
     s.listen(1)
@@ -52,8 +52,8 @@ def listen(ip,port):
                              break
                          }
                      }
-
-                     Start-Process -FilePath $dl\"\\\\RoboLoader\\\\_downloadBin.bat\" -ArgumentList \"CONT\" -Wait
+                     Start-Process -FilePath $dl\"\\\\RoboLoader\\\\___chooseActiveRobot.bat\" -ArgumentList """+activeRobot+""" -Wait
+                     Start-Process -FilePath $dl\"\\\\RoboLoader\\\\_downloadCompleteBackup.bat\" -ArgumentList \"CONT\" -Wait
                      echo \"Backup finished or aborted\""""
     command += "\n"
     conn.send(command.encode())
