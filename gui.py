@@ -423,7 +423,7 @@ def switch_menu(argument):
         60: "_HydraSMB",
         61: "_",
         62: "_",
-        #Industrial
+        #Robobackups
         63: "_WS,192.168.1.121",
         64: "_WZ,192.168.1.122",
         65: "_PAL,192.168.1.123",
@@ -1983,9 +1983,14 @@ page=0
 menu = 1
 line = ["","","","","","","",""]
 selection = 0
+menuLocked=False
 if SCNTYPE == 1 or SCNTYPE == 3:
     print("sctype")
     splash()  # display boot splash image ---------------------------------------------------------------------
+    if GPIO.input(KEY_PRESS_PIN):
+        print("Menu locked")
+        page = 63
+        menuLocked = True
     #print("selected : " + FileSelect(hidpath,".js"))
     device.contrast(2)
 while 1:
@@ -2000,11 +2005,12 @@ while 1:
                 page = 49
             cursor = 7
 
-    if GPIO.input(KEY_LEFT_PIN): # button is released
-        menu = 1
-    else: # button is pressed:
-                # back to main menu on Page 0
-        page = 0
+    if not menuLocked or not page==63: #prevent navigation back to keep user on roboBackups menu
+        if GPIO.input(KEY_LEFT_PIN): # button is released
+            menu = 1
+        else: # button is pressed:
+                    # back to main menu on Page 0
+            page = 0
     if GPIO.input(KEY_RIGHT_PIN): # button is released
         menu = 1
     else: # button is pressed:
