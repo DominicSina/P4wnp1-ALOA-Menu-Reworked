@@ -2185,7 +2185,7 @@ while 1:
                 if cursor == 5:
                     # run as background job P4wnP1_cli hid job command
                     DisplayText("","","","Starting script ","","","")
-                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    cmd = "P4wnP1_cli hid job 'reverseShellLapTop.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()

