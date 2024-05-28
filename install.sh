@@ -32,7 +32,7 @@ cp scripts/startReverseShellListener.sh /usr/local/P4wnP1/scripts/
 chmod +x /usr/local/P4wnP1/scripts/startReverseShellListener.sh
 
 echo "Copying HIDscripts in local P4wnP1"
-cp HIDscripts/*.js /usr/local/P4wnP1/HIDscripts/
+cp HIDscripts/*.js /usr/local/P4wnP1/HIDScripts/
 
 echo "Copying helper in local P4wnP1"
 cp helper/* /usr/local/P4wnP1/helper/

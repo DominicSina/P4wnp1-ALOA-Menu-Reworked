@@ -1,7 +1,8 @@
 import socket, sys, time
 
-def listen(ip,port,activeRobot):
+def listen(ip,port,activeRobot, newFolder):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((ip, port))
     s.listen(1)
     print("Listening on port " + str(port))
@@ -47,7 +48,10 @@ def listen(ip,port,activeRobot):
                     {
                         if (Test-Path -Path $backupFolder\"_\"$backupFolderNr) {
                             $backupFolderNr = $backupFolderNr + 1
-                        } else {
+                        } else {"""+("""
+                            if($backupFolderNr -gt 0){
+                                $backupFolderNr = $backupFolderNr - 1
+                            }""" if not newFolder else """""")+"""
                             $env:backupFolderName=$env:backupFolderName+\"_\"+$backupFolderNr
                             break
                         }
@@ -69,6 +73,7 @@ def listen(ip,port,activeRobot):
                                 $res = $task.Result;
                                 if (-not ([string]::IsNullOrEmpty($res))) {
                                     # Output
+                                    # echo $res
                                     Write-Host $res
                                 }
                                 # Start waiting for the next line.
@@ -90,9 +95,19 @@ def listen(ip,port,activeRobot):
                     echo \"Backup finished or aborted\""""
     command += "\n"
     conn.send(command.encode())
-	
+    #conn.sendall(command.encode())
+    
+    
     #Receive data from the target and get user input
     ans = conn.recv(1024).decode()
     sys.stdout.write(ans)
     s.close()
+    #while True:
+    #    try:
+    #        ans = conn.recv(1024).decode()
+    #        if not ans: break
+    #        sys.stdout.write(ans)
+    #    except:
+    #        sys.stdout.write("An exception occurred")
+    
     # s.shutdown(1) # gives bad file descriptor error
