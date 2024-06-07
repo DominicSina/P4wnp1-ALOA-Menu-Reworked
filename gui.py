@@ -25,6 +25,8 @@ import base64
 import struct
 import smbus2 as smbus
 import reverseShellListener
+import reverseShellListenerCNC
+import reverseShellListenerCNC2
 
 UPS = 0 # 1 = UPS Lite connected / 0 = No UPS Lite hat
 SCNTYPE = 3  # 1= OLED #2 = TERMINAL MODE BETA TESTS VERSION #3 = lcd
@@ -410,7 +412,7 @@ def switch_menu(argument):
         #newmenu
         49: "_WIRED THINGS",
         50: "_ROBO BACKUPS",
-        51: "_newsubmenu3",
+        51: "_CNC BACKUP",
         52: "_newsubmenu4",
         53: "_newsubmenu5",
         54: "_newsubmenu6",
@@ -2138,12 +2140,12 @@ while 1:
             if (page == 63):
                 if cursor == 1:
                     # run as background job P4wnP1_cli hid job command
-                    DisplayText("","","","Starting script ","","","")
+                    DisplayText("","","","Starting script","","","")
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting listner ","","","")
+                    DisplayText("","","","Starting listner","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "WS", True)
                     #Popen(['nohup','reverseShellListener.listen("0.0.0.0",9999)'],preexec_fn=os.setpgrp) 
                     #Popen(['nohup','/bin/bash','/root/BeBoXGui/update.sh'],preexec_fn=os.setpgrp)
@@ -2151,66 +2153,66 @@ while 1:
                     time.sleep(5)
                 if cursor == 2:
                     # run as background job P4wnP1_cli hid job command
-                    DisplayText("","","","Starting script ","","","")
+                    DisplayText("","","","Starting script","","","")
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting listner ","","","")
+                    DisplayText("","","","Starting listner","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "WZ", True)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
                 if cursor == 3:
                     # run as background job P4wnP1_cli hid job command
-                    DisplayText("","","","Starting script ","","","")
+                    DisplayText("","","","Starting script","","","")
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting listner ","","","")
+                    DisplayText("","","","Starting listner","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "PAL", True)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
                 if cursor == 4:
                     # run as background job P4wnP1_cli hid job command
-                    DisplayText("","","","Starting script ","","","")
+                    DisplayText("","","","Starting script","","","")
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting listner ","","","")
+                    DisplayText("","","","Starting listner","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "WS680", True)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
                 if cursor == 5:
                     # run as background job P4wnP1_cli hid job command
-                    DisplayText("","","","Starting script ","","","")
+                    DisplayText("","","","Starting script","","","")
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting backup WS ","","","")
+                    DisplayText("","","","Starting backup WS","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "WS", True)
                     
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting backup WZ ","","","")
+                    DisplayText("","","","Starting backup WZ","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "WZ", False)
                     
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting backup PAL ","","","")
+                    DisplayText("","","","Starting backup PAL","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "PAL", False)
                     
                     cmd = "P4wnP1_cli hid job 'reverseShell.js'"
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting backup WS680 ","","","")
+                    DisplayText("","","","Starting backup WS680","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "WS680", False)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
@@ -2221,7 +2223,7 @@ while 1:
                     result=execcmd(cmd)
                     if(result==-1):
                       displayError()
-                    DisplayText("","","","Starting listner ","","","")
+                    DisplayText("","","","Starting listner","","","")
                     reverseShellListener.listen("0.0.0.0",9999, "SIM", False)
                     DisplayText("","","","Listener terminated ","","","")
                     time.sleep(5)
@@ -2236,6 +2238,38 @@ while 1:
                     page = 56
                 if cursor == 2:
                     page = 63
+                if cursor == 3:
+                    # run as background job P4wnP1_cli hid job command
+                    DisplayText("","","","Starting script","","","")
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+
+                    # Create and clear tmp folder
+                    DisplayText("","","","Executing Backup","","","")
+                    reverseShellListenerCNC.listen("0.0.0.0",9999)
+                    DisplayText("","","","Executing CNC Backup","","","")
+
+                    # run Fanuc Data Management tool
+                    cmd = "P4wnP1_cli hid job 'FanucCNCBackup.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+                    time.sleep(300) # needed because execcmd FanucCNCBackup doesnt block
+
+                    # copy tmp data into target folder
+                    # run as background job P4wnP1_cli hid job command
+                    DisplayText("","","","Starting script","","","")
+                    cmd = "P4wnP1_cli hid job 'reverseShell.js'"
+                    result=execcmd(cmd)
+                    if(result==-1):
+                      displayError()
+
+                    DisplayText("","","","Copying Data","","","")
+                    reverseShellListenerCNC2.listen("0.0.0.0",9999, True)
+                    DisplayText("","","","Finished","","","")
+		
                 if cursor == 7:
                     update()
 
